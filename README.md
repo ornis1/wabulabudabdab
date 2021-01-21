@@ -3,6 +3,9 @@
 ## Build Setup
 
 ```bash
+# set .env
+API_URL=http://jsonplaceholder.typicode.com
+
 # install dependencies
 $ yarn install
 
