@@ -1,50 +1,83 @@
 <template>
   <div class="container">
-    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolores
-    necessitatibus dolorem iusto ipsa minima consectetur, ab laboriosam amet,
-    facere quo consequatur eius, mollitia sit impedit voluptatum illum esse
-    suscipit vero!
+    <div class="-mx-8 w-6/12 hidden lg:block">
+      <div class="px-8">
+        <h1 class="mb-4 text-xl font-bold text-gray-300">Authors</h1>
+        <div
+          class="flex flex-col bg-white max-w-sm px-6 py-4 mx-auto rounded-lg shadow-md"
+        >
+          <text-field
+            v-model="search"
+            placeholder="Search by users"
+            class="mb-2"
+          />
+
+          <ul v-show="filteredUsers.length" class="-mx-6">
+            <user-item
+              v-for="user in filteredUsers"
+              :key="user.id"
+              class="divide-x-1"
+              :user="user"
+              @delete="handleDelete"
+            />
+          </ul>
+          <not-found v-show="!filteredUsers.length" />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-export default {}
+import { deletePost } from '@/api/post'
+import { fetchUsersWithPosts } from '@/api/user'
+import UserItem from '../components/UserItem.vue'
+import TextField from '../components/TextField.vue'
+import NotFound from '../components/NotFound.vue'
+
+export default {
+  components: { UserItem, TextField, NotFound },
+  async asyncData() {
+    const { data: users } = await fetchUsersWithPosts()
+    return { users }
+  },
+  data() {
+    return {
+      search: '',
+    }
+  },
+  computed: {
+    filteredUsers() {
+      return this.users.filter((user) =>
+        user.name.toLowerCase().includes(String(this.search).toLowerCase())
+      )
+    },
+  },
+  methods: {
+    async handleDelete({ userId, postId }) {
+      if (!userId && !postId) return
+
+      /* Удаляем на сервере */
+      await deletePost(postId)
+
+      /* Удаляем локально */
+      this.users = this.users.map((user) => {
+        const record = +user.id === +userId
+
+        // Если юзер есть
+        if (record) {
+          // Удаляем нужный пост
+          const posts = user.posts.filter((post) => +post.id !== +postId)
+
+          return {
+            ...user,
+            posts,
+          }
+        }
+
+        return user
+      })
+    },
+  },
+}
 </script>
-
-<style>
-/* Sample `apply` at-rules with Tailwind CSS
-.container {
-@apply min-h-screen flex justify-center items-center text-center mx-auto;
-}
-*/
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
-}
-</style>
