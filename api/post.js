@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import PostError from '@/errors'
+import PostError from '@/errors/post'
 
 export const fetchPosts = async () => {
   try {

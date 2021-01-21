@@ -26,11 +26,13 @@ export default {
   props: {
     post: {
       type: Object,
-      dafault: () => ({
-        id: '',
-        body: '',
-        title: '',
-      }),
+      default: () => {
+        return {
+          id: '',
+          body: '',
+          title: '',
+        }
+      },
     },
   },
   data() {

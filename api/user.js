@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import UserError from '@/errors'
+import UserError from '@/errors/user'
 
 export const fetchUsers = async () => {
   try {

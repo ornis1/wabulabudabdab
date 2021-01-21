@@ -1,6 +1,6 @@
 <template>
-  <div class="container">
-    <div class="-mx-8 w-6/12 hidden lg:block">
+  <div class="mx-auto flex items-center text-center justify-center container">
+    <div class="md:w-6/12">
       <div class="px-8">
         <h1 class="mb-4 text-xl font-bold text-gray-300">Authors</h1>
         <div
