@@ -1,5 +1,9 @@
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
+  server: {
+    port: process.env.PORT || 3000,
+    host: process.env.HOST || '127.0.0.1',
+  },
   head: {
     title: 'wabulabudabdab',
     htmlAttrs: {
